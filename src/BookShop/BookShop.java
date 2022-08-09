@@ -161,6 +161,7 @@ public class BookShop {
 					pst.setInt(3, price);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Added!");
+					table_load();
 					
 					txtBookName.setText("");
 					txtEdition.setText("");
@@ -179,7 +180,13 @@ public class BookShop {
 		JButton btnExit = new JButton("EXIT");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				if (JOptionPane.showConfirmDialog(frame, "Exit application?" , "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+				else {
+					
+				}
+				
 			}
 		});
 		btnExit.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -290,27 +297,37 @@ public class BookShop {
 		JButton btnDelete = new JButton("DELETE");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				int  bookId;
 				
+				int  bookId;
+				String bname;
+				bname = txtBookName.getText();
 				bookId = Integer.valueOf(txtBookId.getText());
 				
-				try {
-					pst = con.prepareStatement("delete from book where id = ?");
+				
+				if (JOptionPane.showConfirmDialog(frame, "Do you want to delete " + bname + "?" , "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION ) {
 					
-					pst.setInt(1, bookId);
-					pst.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Record Deleted!");
+					try {
+						pst = con.prepareStatement("delete from book where id = ?");
+						
+						pst.setInt(1, bookId);
+						pst.executeUpdate();
+						JOptionPane.showMessageDialog(null, "Record Deleted!");
+						
+						txtBookName.setText("");
+						txtEdition.setText("");
+						txtPrice.setText("");
+						txtBookName.requestFocus();
+						table_load();
+					}
+					catch (SQLException ex) {
+						ex.printStackTrace();
+					}
 					
-					txtBookName.setText("");
-					txtEdition.setText("");
-					txtPrice.setText("");
-					txtBookName.requestFocus();
-					table_load();
 				}
-				catch (SQLException ex) {
-					ex.printStackTrace();
+				else {
+					
 				}
+				
 			}
 		});
 		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 14));
